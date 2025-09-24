@@ -1,7 +1,7 @@
 {
   "name": "capacitor-posthog",
   "version": "0.0.1",
-  "description": "Posthog plugin for Capacitor",
+  "description": "Capacitor plugin for PostHog",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -11,11 +11,10 @@
     "android/build.gradle",
     "dist/",
     "ios/Sources",
-    "ios/Tests",
     "Package.swift",
     "CapacitorPosthog.podspec"
   ],
-  "author": "rediska1114",
+  "author": "rediska1114 <rediska1114@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -39,30 +38,38 @@
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
     "swiftlint": "node-swiftlint",
-    "docgen": "docgen --api CapacitorPosthogPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run clean && tsc && rollup -c rollup.config.mjs",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/docgen": "^0.3.0",
-    "@capacitor/ios": "^7.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/device": "^6.0.0",
+    "@capacitor/docgen": "^0.2.2",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0",
+    "@dotenv-run/rollup": "^1.3.7",
     "@ionic/eslint-config": "^0.4.0",
     "@ionic/prettier-config": "^4.0.0",
     "@ionic/swiftlint-config": "^2.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "eslint": "^8.57.0",
     "prettier": "^3.4.2",
     "prettier-plugin-java": "^2.6.6",
     "rimraf": "^6.0.1",
     "rollup": "^4.30.1",
+    "rollup-plugin-typescript2": "^0.36.0",
     "swiftlint": "^2.0.0",
-    "typescript": "~4.1.5"
+    "typescript": "~5.0.4"
   },
   "peerDependencies": {
-    "@capacitor/core": ">=7.0.0"
+    "@capacitor/app": ">=5.0.0",
+    "@capacitor/core": ">=5.0.0",
+    "@capacitor/device": ">=5.0.0",
+    "@capacitor/preferences": ">=5.0.0"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",
@@ -76,5 +83,8 @@
     "android": {
       "src": "android"
     }
+  },
+  "dependencies": {
+    "@posthog/core": "^1.2.0"
   }
 }

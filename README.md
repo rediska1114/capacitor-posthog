@@ -1,37 +1,81 @@
 # capacitor-posthog
 
-Posthog plugin for Capacitor
+Capacitor plugin for PostHog
 
 ## Install
 
 ```bash
-npm install capacitor-posthog
+npm install capacitor-posthog @posthog/core @capacitor/app @capacitor/device @capacitor/preferences
 npx cap sync
 ```
 
-## API
-
-<docgen-index>
-
-* [`echo(...)`](#echo)
-
-</docgen-index>
-
-<docgen-api>
-<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
+## Usage
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+import { PostHog } from 'capacitor-posthog';
+
+// Create PostHog instance
+const posthog = new PostHog();
+
+// Initialize with setup method (required)
+await posthog.setup('your-api-key', {
+  host: 'https://app.posthog.com',
+  enableSessionReplay: true, // Session replay starts automatically
+  sessionReplayConfig: {
+    maskAllTextInputs: true,
+    maskAllImages: false
+  },
+  captureAppLifecycleEvents: true
+});
+
+// Track an event
+await posthog.capture('button_clicked', {
+  button_name: 'signup'
+});
+
+// Identify user
+await posthog.identify('user_123', {
+  email: 'user@example.com'
+});
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+### Angular Example
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+```typescript
+// posthog.service.ts
+@Injectable({
+  providedIn: 'root'
+})
+export class PosthogService {
+  private posthog = new PostHog();
 
---------------------
+  async init() {
+    await this.posthog.setup(environment.posthogApiKey, {
+      host: environment.posthogHost,
+      enableSessionReplay: true
+    });
+  }
 
-</docgen-api>
+  capture(event: string, properties?: any) {
+    return this.posthog.capture(event, properties);
+  }
+}
+```
+
+### Vue/React Example
+
+```typescript
+// posthog.ts
+export const posthog = new PostHog();
+
+// In your app initialization
+async function initializeApp() {
+  await posthog.setup(process.env.POSTHOG_API_KEY, {
+    host: process.env.POSTHOG_HOST,
+    enableSessionReplay: true
+  });
+}
+
+// Methods will wait gracefully if called before setup
+posthog.capture('app_loaded'); // ✅ Waits for setup completion
+```

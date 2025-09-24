@@ -1,10 +1,9 @@
-import { registerPlugin } from '@capacitor/core';
+export * from './definitions'
+export * from './types'
 
-import type { CapacitorPosthogPlugin } from './definitions';
+export { PostHog } from './posthog-capacitor'
+export { CapacitorPosthog } from './posthog-capacitor'
+export { initAutocapture } from './autocapture'
 
-const CapacitorPosthog = registerPlugin<CapacitorPosthogPlugin>('CapacitorPosthog', {
-  web: () => import('./web').then((m) => new m.CapacitorPosthogWeb()),
-});
-
-export * from './definitions';
-export { CapacitorPosthog };
+import { PostHog } from './posthog-capacitor'
+export default PostHog
