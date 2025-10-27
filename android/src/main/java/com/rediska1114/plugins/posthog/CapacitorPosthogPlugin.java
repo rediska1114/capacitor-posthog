@@ -18,7 +18,7 @@ public class CapacitorPosthogPlugin extends Plugin {
         JSObject sdkReplayConfig = call.getObject("sdkReplayConfig", new JSObject());
         JSObject decideReplayConfig = call.getObject("decideReplayConfig", new JSObject());
 
-        implementation.startSessionReplay(sessionId, sdkOptions, sdkReplayConfig, decideReplayConfig, new CapacitorPosthog.Callback() {
+        implementation.startSessionReplay(getContext(), sessionId, sdkOptions, sdkReplayConfig, decideReplayConfig, new CapacitorPosthog.Callback() {
             @Override
             public void onComplete() {
                 call.resolve();

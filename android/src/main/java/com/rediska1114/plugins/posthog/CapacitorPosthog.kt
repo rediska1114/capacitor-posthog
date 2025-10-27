@@ -1,5 +1,6 @@
 package com.rediska1114.plugins.posthog
 
+import android.content.Context
 import android.util.Log
 import com.getcapacitor.JSObject
 import com.posthog.PostHog
@@ -24,6 +25,7 @@ class CapacitorPosthog {
     private var config: PostHogAndroidConfig? = null
 
     fun startSessionReplay(
+        context: Context,
         sessionId: String,
         sdkOptions: JSObject,
         sdkReplayConfig: JSObject,
@@ -40,26 +42,26 @@ class CapacitorPosthog {
             val uuid = UUID.fromString(sessionId)
             PostHogSessionManager.setSessionId(uuid)
 
-            val apiKey = sdkOptions.getString("apiKey", "")
-            val host = sdkOptions.getString("host", PostHogConfig.DEFAULT_HOST)
-            val debug = sdkOptions.getBool("debug", false)
+            val apiKey = sdkOptions.getString("apiKey") ?: ""
+            val host = sdkOptions.getString("host") ?: PostHogConfig.DEFAULT_HOST
+            val debug = sdkOptions.getBool("debug") ?: false
 
-            val maskAllTextInputs = sdkReplayConfig.getBool("maskAllTextInputs", true)
-            val maskAllImages = sdkReplayConfig.getBool("maskAllImages", true)
-            val captureLog = sdkReplayConfig.getBool("captureLog", true)
+            val maskAllTextInputs = sdkReplayConfig.getBool("maskAllTextInputs") ?: true
+            val maskAllImages = sdkReplayConfig.getBool("maskAllImages") ?: true
+            val captureLog = sdkReplayConfig.getBool("captureLog") ?: true
 
             val throttleDelayMs = if (sdkReplayConfig.has("throttleDelayMs")) {
                 sdkReplayConfig.getInteger("throttleDelayMs")
             } else {
-                sdkReplayConfig.getInteger("androidDebouncerDelayMs", 1000)
+                sdkReplayConfig.getInteger("androidDebouncerDelayMs") ?: 1000
             }
 
-            val endpoint = decideReplayConfig.getString("endpoint", "")
+            val endpoint = decideReplayConfig.getString("endpoint") ?: ""
 
-            val distinctId = sdkOptions.getString("distinctId", "")
-            val anonymousId = sdkOptions.getString("anonymousId", "")
-            val sdkVersion = sdkOptions.getString("sdkVersion", "")
-            val flushAt = sdkOptions.getInteger("flushAt", 20)
+            val distinctId = sdkOptions.getString("distinctId") ?: ""
+            val anonymousId = sdkOptions.getString("anonymousId") ?: ""
+            val sdkVersion = sdkOptions.getString("sdkVersion") ?: ""
+            val flushAt = sdkOptions.getInteger("flushAt") ?: 20
 
             val config = PostHogAndroidConfig(apiKey, host).apply {
                 this.debug = debug
@@ -70,7 +72,7 @@ class CapacitorPosthog {
                 sessionReplay = true
                 sessionReplayConfig.screenshot = true
                 sessionReplayConfig.captureLogcat = captureLog
-                sessionReplayConfig.throttleDelayMs = throttleDelayMs.toLong()
+                sessionReplayConfig.throttleDelayMs = (throttleDelayMs ?: 1000).toLong()
                 sessionReplayConfig.maskAllImages = maskAllImages
                 sessionReplayConfig.maskAllTextInputs = maskAllTextInputs
 
@@ -84,7 +86,7 @@ class CapacitorPosthog {
                 }
             }
 
-            PostHogAndroid.setup(null, config)
+            PostHogAndroid.setup(context, config)
             this.config = config
 
             setIdentify(config.cachePreferences, distinctId, anonymousId)
